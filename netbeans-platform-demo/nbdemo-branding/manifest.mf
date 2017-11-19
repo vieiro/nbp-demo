@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: org.nbdemo.branding
+OpenIDE-Module-Layer: org/nbdemo/branding/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/nbdemo/branding/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

@@ -1,0 +1,32 @@
+## NetBeans Platform Feature List
+---
+"features":
+- "title": "Super strong Module System"
+  "subtitle": "Tested in the battlefield for almost 20 years."
+  "description": |-
+    The NetBeans Platform module system is responsible for quickly loading the hundreths of modules that comprise the NetBeans IDE very quickly.
+    By using declarative information, it avoids running unnecessary code at startup, making all NetBeans Platform based applications launch blasting fast.
+    As a plus, the NetBeans Module System is able to handle OSGi modules too.
+  "image": "org/nbdemo/gui/features/model/modular.jpg"
+  "links": []
+- "title": "Powerful Window System"
+  "subtitle": "The easiest to use Window System for the most complex GUI Applications."
+  "description": |-
+    Most serious applications need more than one window. Coding good interaction between multiple windows is not a trivial task. 
+    The NetBeans window system lets you maximize/minimize, dock/undock, and drag-and-drop windows, without you providing any code at all. 
+  "image": "org/nbdemo/gui/features/model/windows.jpg"
+  "links": []
+- "title": "Ultra DRY"
+  "subtitle": "Don't repeat yourself."
+  "description": |-
+    The NetBeans Platform exposes a rich set of APIs, which are tried, tested, and continually being improved for almost 20 years.
+    Filesystems API, Automatic feature discovery, HTML handling from Java, OS/X integration for Swing, and more...
+  "image": "org/nbdemo/gui/features/model/dry.jpg"
+  "links": ["http://bits.netbeans.org/dev/javadoc/index.html"]
+- "title": "Out of the box"
+  "subtitle": "Let's repeat: don't repeat yourself."
+  "description": |-
+    Complex GUI components that run out of the box with any JRE/JDK installation. Outlines, Dialogs, Powerful editors, Windows,  Property Sheets, Icon views, Built-in Options Dialog and more, all unified through the simple to use Nodes and Explorers APIs.
+  "image": "org/nbdemo/gui/features/model/gui.jpg"
+  "links": ["http://bits.netbeans.org/dev/javadoc/index.html"]
+    

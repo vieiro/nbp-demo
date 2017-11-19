@@ -1,0 +1,379 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+# This is a map of NetBeans module name bases to arrays of links.
+---
+modules:
+  net.java.html:
+    documentationURLs: []
+    moduleCodeNameBase: net.java.html
+    tutorialURLs: []
+  net.java.html.boot:
+    documentationURLs: []
+    moduleCodeNameBase: net.java.html.boot
+    tutorialURLs: []
+  net.java.html.boot.fx:
+    documentationURLs: []
+    moduleCodeNameBase: net.java.html.boot.fx
+    tutorialURLs: []
+  net.java.html.boot.script:
+    documentationURLs: []
+    moduleCodeNameBase: net.java.html.boot.script
+    tutorialURLs: []
+  net.java.html.geo:
+    documentationURLs: []
+    moduleCodeNameBase: net.java.html.geo
+    tutorialURLs: []
+  net.java.html.json:
+    documentationURLs: []
+    moduleCodeNameBase: net.java.html.json
+    tutorialURLs: []
+  net.java.html.sound:
+    documentationURLs: []
+    moduleCodeNameBase: net.java.html.sound
+    tutorialURLs: []
+  org.nbdemo.introspection:
+    documentationURLs: []
+    moduleCodeNameBase: org.nbdemo.introspection
+    tutorialURLs: []
+  org.nbdemo.modules:
+    documentationURLs: []
+    moduleCodeNameBase: org.nbdemo.modules
+    tutorialURLs: []
+  org.nbdemo.snakeyaml:
+    documentationURLs: []
+    moduleCodeNameBase: org.nbdemo.snakeyaml
+    tutorialURLs: []
+  org.netbeans.api.annotations.common:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.api.annotations.common
+    tutorialURLs: []
+  org.netbeans.api.htmlui:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.api.htmlui
+    tutorialURLs: []
+  org.netbeans.api.intent:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.api.intent
+    tutorialURLs: []
+  org.netbeans.api.io:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.api.io
+    tutorialURLs: []
+  org.netbeans.api.progress:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.api.progress
+    tutorialURLs: []
+  org.netbeans.api.progress.compat8:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.api.progress.compat8
+    tutorialURLs: []
+  org.netbeans.api.progress.nb:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.api.progress.nb
+    tutorialURLs: []
+  org.netbeans.api.search:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.api.search
+    tutorialURLs: []
+  org.netbeans.api.templates:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.api.templates
+    tutorialURLs: []
+  org.netbeans.bootstrap:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.bootstrap
+    tutorialURLs: []
+  org.netbeans.core:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.core
+    tutorialURLs: []
+  org.netbeans.core.io.ui:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.core.io.ui
+    tutorialURLs: []
+  org.netbeans.core.multitabs:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.core.multitabs
+    tutorialURLs: []
+  org.netbeans.core.multiview:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.core.multiview
+    tutorialURLs: []
+  org.netbeans.core.nativeaccess:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.core.nativeaccess
+    tutorialURLs: []
+  org.netbeans.core.netigso:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.core.netigso
+    tutorialURLs: []
+  org.netbeans.core.network:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.core.network
+    tutorialURLs: []
+  org.netbeans.core.osgi:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.core.osgi
+    tutorialURLs: []
+  org.netbeans.core.output2:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.core.output2
+    tutorialURLs: []
+  org.netbeans.core.startup:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.core.startup
+    tutorialURLs: []
+  org.netbeans.core.startup.base:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.core.startup.base
+    tutorialURLs: []
+  org.netbeans.core.ui:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.core.ui
+    tutorialURLs: []
+  org.netbeans.core.windows:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.core.windows
+    tutorialURLs: []
+  org.netbeans.html.ko4j:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.html.ko4j
+    tutorialURLs: []
+  org.netbeans.html.xhr4j:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.html.xhr4j
+    tutorialURLs: []
+  org.netbeans.lib.uihandler:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.lib.uihandler
+    tutorialURLs: []
+  org.netbeans.libs.asm:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.libs.asm
+    tutorialURLs: []
+  org.netbeans.libs.felix:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.libs.felix
+    tutorialURLs: []
+  org.netbeans.libs.javafx:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.libs.javafx
+    tutorialURLs: []
+  org.netbeans.libs.jna:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.libs.jna
+    tutorialURLs: []
+  org.netbeans.libs.jna.platform:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.libs.jna.platform
+    tutorialURLs: []
+  org.netbeans.libs.junit4:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.libs.junit4
+    tutorialURLs: []
+  org.netbeans.libs.osgi:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.libs.osgi
+    tutorialURLs: []
+  org.netbeans.libs.testng:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.libs.testng
+    tutorialURLs: []
+  org.netbeans.modules.applemenu:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.modules.applemenu
+    tutorialURLs: []
+  org.netbeans.modules.editor.mimelookup:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.modules.editor.mimelookup
+    tutorialURLs: []
+  org.netbeans.modules.editor.mimelookup.impl:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.modules.editor.mimelookup.impl
+    tutorialURLs: []
+  org.netbeans.modules.javahelp:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.modules.javahelp
+    tutorialURLs: []
+  org.netbeans.modules.junitlib:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.modules.junitlib
+    tutorialURLs: []
+  org.netbeans.modules.keyring:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.modules.keyring
+    tutorialURLs: []
+  org.netbeans.modules.keyring.fallback:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.modules.keyring.fallback
+    tutorialURLs: []
+  org.netbeans.modules.keyring.impl:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.modules.keyring.impl
+    tutorialURLs: []
+  org.netbeans.modules.masterfs:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.modules.masterfs
+    tutorialURLs: []
+  org.netbeans.modules.masterfs.linux:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.modules.masterfs.linux
+    tutorialURLs: []
+  org.netbeans.modules.masterfs.macosx:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.modules.masterfs.macosx
+    tutorialURLs: []
+  org.netbeans.modules.masterfs.nio2:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.modules.masterfs.nio2
+    tutorialURLs: []
+  org.netbeans.modules.masterfs.ui:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.modules.masterfs.ui
+    tutorialURLs: []
+  org.netbeans.modules.masterfs.windows:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.modules.masterfs.windows
+    tutorialURLs: []
+  org.netbeans.modules.netbinox:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.modules.netbinox
+    tutorialURLs: []
+  org.netbeans.modules.options.api:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.modules.options.api
+    tutorialURLs: []
+  org.netbeans.modules.options.keymap:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.modules.options.keymap
+    tutorialURLs: []
+  org.netbeans.modules.print:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.modules.print
+    tutorialURLs: []
+  org.netbeans.modules.progress.ui:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.modules.progress.ui
+    tutorialURLs: []
+  org.netbeans.modules.queries:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.modules.queries
+    tutorialURLs: []
+  org.netbeans.modules.sampler:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.modules.sampler
+    tutorialURLs: []
+  org.netbeans.modules.sendopts:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.modules.sendopts
+    tutorialURLs: []
+  org.netbeans.modules.settings:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.modules.settings
+    tutorialURLs: []
+  org.netbeans.modules.spi.actions:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.modules.spi.actions
+    tutorialURLs: []
+  org.netbeans.modules.templatesui:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.modules.templatesui
+    tutorialURLs: []
+  org.netbeans.modules.uihandler:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.modules.uihandler
+    tutorialURLs: []
+  org.netbeans.spi.quicksearch:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.spi.quicksearch
+    tutorialURLs: []
+  org.netbeans.swing.outline:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.swing.outline
+    tutorialURLs: []
+  org.netbeans.swing.plaf:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.swing.plaf
+    tutorialURLs: []
+  org.netbeans.swing.tabcontrol:
+    documentationURLs: []
+    moduleCodeNameBase: org.netbeans.swing.tabcontrol
+    tutorialURLs: []
+  org.openide.actions:
+    documentationURLs: []
+    moduleCodeNameBase: org.openide.actions
+    tutorialURLs: []
+  org.openide.awt:
+    documentationURLs: []
+    moduleCodeNameBase: org.openide.awt
+    tutorialURLs: []
+  org.openide.dialogs:
+    documentationURLs: []
+    moduleCodeNameBase: org.openide.dialogs
+    tutorialURLs: []
+  org.openide.explorer:
+    documentationURLs: []
+    moduleCodeNameBase: org.openide.explorer
+    tutorialURLs: []
+  org.openide.filesystems:
+    documentationURLs: []
+    moduleCodeNameBase: org.openide.filesystems
+    tutorialURLs: []
+  org.openide.filesystems.compat8:
+    documentationURLs: []
+    moduleCodeNameBase: org.openide.filesystems.compat8
+    tutorialURLs: []
+  org.openide.filesystems.nb:
+    documentationURLs: []
+    moduleCodeNameBase: org.openide.filesystems.nb
+    tutorialURLs: []
+  org.openide.io:
+    documentationURLs: []
+    moduleCodeNameBase: org.openide.io
+    tutorialURLs: []
+  org.openide.loaders:
+    documentationURLs: []
+    moduleCodeNameBase: org.openide.loaders
+    tutorialURLs: []
+  org.openide.modules:
+    documentationURLs: []
+    moduleCodeNameBase: org.openide.modules
+    tutorialURLs: []
+  org.openide.nodes:
+    documentationURLs: []
+    moduleCodeNameBase: org.openide.nodes
+    tutorialURLs: []
+  org.openide.text:
+    documentationURLs: []
+    moduleCodeNameBase: org.openide.text
+    tutorialURLs: []
+  org.openide.util:
+    documentationURLs: []
+    moduleCodeNameBase: org.openide.util
+    tutorialURLs: []
+  org.openide.util.lookup:
+    documentationURLs: []
+    moduleCodeNameBase: org.openide.util.lookup
+    tutorialURLs: []
+  org.openide.util.ui:
+    documentationURLs: []
+    moduleCodeNameBase: org.openide.util.ui
+    tutorialURLs: []
+  org.openide.windows:
+    documentationURLs: []
+    moduleCodeNameBase: org.openide.windows
+    tutorialURLs: []

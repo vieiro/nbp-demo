@@ -1,0 +1,7 @@
+All JPG images in this directory are modifications of images from http://pixabay.com and are licensed under the CC0 Creative Commons License.
+
+You can learn more about Pixabay license at the following URL:
+https://pixabay.com/en/service/terms/#usage
+
+The *.xcf files are GIMP versions of the images, are copyrighted in 2017 by Antonio Vieiro (antonio@vieiro.net) and are licensed under the Apache 2.0 License.
+
