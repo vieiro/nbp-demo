@@ -1,25 +1,23 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * Copyright 2017 Antonio Vieiro (antonio@vieiro.net)
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.nbdemo.introspection.nodes.dependencies;
 
 import java.awt.Image;
 import java.util.List;
+import org.nbdemo.introspection.InstalledModules;
 import org.nbdemo.introspection.ModuleDependencyType;
 import org.openide.modules.Dependency;
 import org.openide.modules.ModuleInfo;
@@ -52,13 +50,17 @@ public class NBModuleDependenciesByTypeNode extends AbstractNode {
 
         @Override
         protected Node[] createNodes(Dependency dependency) {
-            return new Node[]{new NBModuleDependencyEntry(dependency)};
+            return new Node[]{dependency.getType() == Dependency.TYPE_MODULE ? new NBModuleModuleDependencyEntry(dependency) : new NBModuleDependencyEntry(dependency)};
         }
 
     }
 
     private List<Dependency> dependencies;
     private ModuleDependencyType dependencyType;
+    
+    public NBModuleDependenciesByTypeNode(ModuleInfo moduleInfo, ModuleDependencyType moduleDependencyType) {
+        this(moduleDependencyType, InstalledModules.getInstance().dependenciesOfType(moduleInfo, moduleDependencyType), new InstanceContent());
+    }
 
     public NBModuleDependenciesByTypeNode(ModuleDependencyType dependencyType, List<Dependency> dependencies) {
         this(dependencyType, dependencies, new InstanceContent());

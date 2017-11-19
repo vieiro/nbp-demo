@@ -1,20 +1,17 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * Copyright 2017 Antonio Vieiro (antonio@vieiro.net)
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.nbdemo.introspection;
 
@@ -27,6 +24,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.nbdemo.introspection.documentation.AllModulesDocumentation;
 import org.nbdemo.introspection.documentation.ModuleDocumentationHandler;
+import org.openide.modules.Dependency;
 import org.openide.modules.ModuleInfo;
 import org.openide.util.Lookup;
 
@@ -57,7 +55,9 @@ public class InstalledModules {
         sortedByCodeNameBase = Collections.unmodifiableList(allModules.stream().sorted((a, b) -> {
             return a.getCodeNameBase().compareTo(b.getCodeNameBase());
         }).collect(Collectors.toList()));
-        modulesByCodeNameBase = allModules.stream().collect(Collectors.groupingBy( (m) -> { return m.getCodeNameBase(); }));
+        modulesByCodeNameBase = allModules.stream().collect(Collectors.groupingBy((m) -> {
+            return m.getCodeNameBase();
+        }));
         modulesDocumentation = ModuleDocumentationHandler.getDefault().getDocumentation();
         Logger.getLogger(InstalledModules.class.getName()).log(Level.INFO, "Modules: " + allModules.size());
     }
@@ -74,10 +74,30 @@ public class InstalledModules {
         // TODO: Add documentation links
         return new String[0];
     }
-    
+
     public ModuleInfo getModuleByCodeNameBase(String codeNameBase) {
         List<ModuleInfo> modules = modulesByCodeNameBase.get(codeNameBase);
         return modules == null ? null : modules.size() > 0 ? modules.get(0) : null;
+    }
+
+    public static final List<Dependency> dependenciesOfType(ModuleInfo moduleInfo, ModuleDependencyType moduleDependencyType) {
+        return moduleInfo.getDependencies().stream().filter((dependency) -> {
+            return dependency.getType() == moduleDependencyType.getType();
+        }).collect(Collectors.toList());
+    }
+
+    public static final List<ModuleInfo> moduleDependencies(ModuleInfo moduleInfo) {
+        List<Dependency> moduleDependencies = dependenciesOfType(moduleInfo, ModuleDependencyType.MODULE);
+
+        try {
+        return moduleDependencies.stream().map((dependency) -> {
+            return getInstance().getModuleByCodeNameBase(dependency.getName());
+        }).collect(Collectors.toList());
+        } catch (NullPointerException npe) {
+            Logger.getLogger(InstalledModules.class.getName()).log(Level.SEVERE, "Problem finding module dependencies for module " + moduleInfo.getCodeName() + ":" + npe.getMessage(), npe);
+            return Collections.<ModuleInfo>emptyList();
+        }
+
     }
 
 }

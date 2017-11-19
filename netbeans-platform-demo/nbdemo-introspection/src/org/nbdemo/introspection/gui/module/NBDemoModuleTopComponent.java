@@ -1,31 +1,38 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * Copyright 2017 Antonio Vieiro (antonio@vieiro.net)
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.nbdemo.introspection.gui.module;
 
+import java.awt.BorderLayout;
+import org.nbdemo.introspection.ModuleDependencyType;
+import org.nbdemo.introspection.nodes.dependencies.NBModuleDependenciesByTypeNode;
+import org.nbdemo.introspection.nodes.dependencies.NBModuleModuleDependencyEntry;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.explorer.ExplorerManager;
+import org.openide.explorer.ExplorerUtils;
+import org.openide.explorer.view.OutlineView;
 import org.openide.modules.ModuleInfo;
+import org.openide.nodes.Node;
+import org.openide.util.Lookup;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
+import org.openide.util.lookup.ProxyLookup;
 
 /**
  * Top component which displays something.
@@ -51,17 +58,36 @@ import org.openide.util.lookup.InstanceContent;
     "CTL_NBDemoModuleTopComponent=NBDemoModule Window",
     "HINT_NBDemoModuleTopComponent=Module detail"
 })
-public final class NBDemoModuleTopComponent extends TopComponent {
+public final class NBDemoModuleTopComponent extends TopComponent implements ExplorerManager.Provider {
     
     private ModuleInfoContainer moduleInfoContainer;
     private InstanceContent instanceContent;
+    private Node moduleModuleDependenciesNode;
+    private ExplorerManager explorerManager;
+    private OutlineView outlineView;
 
     public NBDemoModuleTopComponent() {
         initComponents();
         setName(Bundle.CTL_NBDemoModuleTopComponent());
         setToolTipText(Bundle.HINT_NBDemoModuleTopComponent());
+        explorerManager = new ExplorerManager();
         instanceContent = new InstanceContent();
-        associateLookup(new AbstractLookup(instanceContent));
+
+        Lookup compoundLookup = new ProxyLookup(
+                new AbstractLookup(instanceContent),
+                ExplorerUtils.createLookup(explorerManager, getActionMap()));
+        associateLookup(compoundLookup);
+        outlineView = new OutlineView();
+        pnlDependencies.add(outlineView, BorderLayout.CENTER);
+        outlineView.getOutline().setRootVisible(false);
+        outlineView.getOutline().setShowGrid(true);
+        // @see NBModuleModuleDependencyEntry for a list of properties.
+        outlineView.setPropertyColumns(
+                NBModuleModuleDependencyEntry.PROP_MODULENAME, "Module", // TODO: I18N
+                NBModuleModuleDependencyEntry.PROP_CODENAMEBASE, "Code Base Name", // TODO: I18N
+                NBModuleModuleDependencyEntry.PROP_SPECIFICATIONVERSION, "API Version", // TODO: I18N
+                NBModuleModuleDependencyEntry.PROP_COMPARISON, "Type" // TODO: I18N
+        );
     }
     
     public void setModuleInfo(ModuleInfo moduleInfo) {
@@ -78,6 +104,7 @@ public final class NBDemoModuleTopComponent extends TopComponent {
             txtImplementationVersion.setText("");
             setToolTipText("No module");
             setDisplayName("No module");
+            this.moduleModuleDependenciesNode = Node.EMPTY;
         } else {
             txtDisplayName.setText(moduleInfo.getDisplayName());
             txtCodeNameBase.setText(moduleInfo.getCodeNameBase());
@@ -86,7 +113,14 @@ public final class NBDemoModuleTopComponent extends TopComponent {
             setDisplayName(moduleInfo.getDisplayName());
             setToolTipText(moduleInfo.getDisplayName());
             instanceContent.add(moduleInfoContainer);
+            this.moduleModuleDependenciesNode = new NBModuleDependenciesByTypeNode(moduleInfo, ModuleDependencyType.MODULE);
         }
+        explorerManager.setRootContext(this.moduleModuleDependenciesNode);
+    }
+
+    @Override
+    public ExplorerManager getExplorerManager() {
+        return explorerManager;
     }
 
     
@@ -103,6 +137,7 @@ public final class NBDemoModuleTopComponent extends TopComponent {
         txtVersion = new javax.swing.JTextField();
         lblImplementationVersion = new javax.swing.JLabel();
         txtImplementationVersion = new javax.swing.JTextField();
+        pnlDependencies = new javax.swing.JPanel();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -189,6 +224,16 @@ public final class NBDemoModuleTopComponent extends TopComponent {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         add(jPanel1, gridBagConstraints);
+
+        pnlDependencies.setLayout(new java.awt.BorderLayout());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 10.0;
+        add(pnlDependencies, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -197,6 +242,7 @@ public final class NBDemoModuleTopComponent extends TopComponent {
     private javax.swing.JLabel lblDisplayName;
     private javax.swing.JLabel lblImplementationVersion;
     private javax.swing.JLabel lblVersion;
+    private javax.swing.JPanel pnlDependencies;
     private javax.swing.JTextField txtCodeNameBase;
     private javax.swing.JTextField txtDisplayName;
     private javax.swing.JTextField txtImplementationVersion;
