@@ -20,7 +20,7 @@ There are not pre-built binaries for any platform. You can build these yourself,
 
 ## Screenshots
 
-![Running on a Linux desktop](https://raw.github.com/vieiro/nbp-demo/master/resources/screenshot.png)
+![Running on a Linux desktop](https://raw.github.com/vieiro/nbp-demo/blob/master/resources/screenshot.png)
 
 ## Contributing
 
