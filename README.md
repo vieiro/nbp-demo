@@ -7,6 +7,8 @@ The application shows a list of installed modules, as well as some information
 about each module. It also highlights some of the features of the NetBeans
 Platform.
 
+This application requires just 26 Java classes.
+
 ## Building
 
 - Build the [Apache NetBeans Incubator Platform](https://github.com/apache/incubator-netbeans).
