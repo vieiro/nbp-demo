@@ -19,7 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Represents the documentation for a module.
+ * This may be a set of links, and a set of tutorials.
  */
 public class ModuleDocumentation {
     private String moduleCodeNameBase;

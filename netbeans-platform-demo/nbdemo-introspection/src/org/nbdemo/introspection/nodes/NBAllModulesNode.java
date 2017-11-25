@@ -28,7 +28,7 @@ import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 
 /**
- *
+ * Root node holding all installed modules.
  */
 public class NBAllModulesNode extends AbstractNode {
 
@@ -49,7 +49,7 @@ public class NBAllModulesNode extends AbstractNode {
 
         @Override
         protected Node[] createNodes(ModuleInfo moduleInfo) {
-            return new Node[]{new NBModuleNode(moduleInfo)};
+            return new Node[]{new ModuleNode(moduleInfo)};
         }
     }
 

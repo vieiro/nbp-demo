@@ -21,6 +21,7 @@ import java.awt.event.ActionEvent;
 import java.util.Set;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import org.nbdemo.introspection.ModuleInfoProvider;
 import org.nbdemo.introspection.gui.module.NBDemoModuleTopComponent;
 import org.nbdemo.introspection.nodes.documentation.NBModuleDocumentationNode;
 import org.nbdemo.introspection.nodes.dependencies.NBModuleDependenciesNode;
@@ -30,7 +31,6 @@ import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.util.ImageUtilities;
-import org.openide.util.actions.SystemAction;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.windows.TopComponent;
@@ -38,10 +38,8 @@ import org.openide.windows.WindowManager;
 
 /**
  * A Node that represents a NetBeans Module.
- *
- * @author Antonio vieiro@apache.org
  */
-public class NBModuleNode extends AbstractNode {
+public class ModuleNode extends AbstractNode implements ModuleInfoProvider {
 
     private static enum NBModuleChildrenTypes {
         DEPENDENCIES,
@@ -81,30 +79,31 @@ public class NBModuleNode extends AbstractNode {
         }
 
     }
-    
 
     private ModuleInfo moduleInfo;
     private InstanceContent instanceContent;
     private AbstractAction openAction;
+    private ModuleProperties properties;
 
-    public NBModuleNode(ModuleInfo moduleInfo) {
+    public ModuleNode(ModuleInfo moduleInfo) {
         this(moduleInfo, new InstanceContent());
     }
 
-    private NBModuleNode(ModuleInfo info, InstanceContent ic) {
+    private ModuleNode(ModuleInfo info, InstanceContent ic) {
         super(new NBModuleNodeChildren(info), new AbstractLookup(ic));
         this.moduleInfo = info;
         this.instanceContent = ic;
+        this.properties = new ModuleProperties(this);
 
         OpenCookie openCookie = new OpenCookie() {
             @Override
             public void open() {
-                NBModuleNode.this.open();
+                ModuleNode.this.open();
             }
         };
-        
+
         instanceContent.add(openCookie);
-        
+
         this.openAction = new AbstractAction("Open") // TODO: I18N
         {
             @Override
@@ -113,9 +112,9 @@ public class NBModuleNode extends AbstractNode {
             }
         };
     }
-    
+
     private void open() {
-        
+
         TopComponent alreadyOpenTopComponent = null;
         Set<TopComponent> openTopComponents = WindowManager.getDefault().getRegistry().getOpened();
         for (TopComponent tc : openTopComponents) {
@@ -125,7 +124,7 @@ public class NBModuleNode extends AbstractNode {
                 break;
             }
         }
-        
+
         if (alreadyOpenTopComponent != null) {
             alreadyOpenTopComponent.requestActive();
         } else {
@@ -137,13 +136,18 @@ public class NBModuleNode extends AbstractNode {
     }
 
     @Override
+    public ModuleInfo getModuleInfo() {
+        return moduleInfo;
+    }
+
+    @Override
     public Action getPreferredAction() {
         return openAction;
     }
 
     @Override
     public Action[] getActions(boolean context) {
-        return new Action[] { openAction };
+        return new Action[]{openAction};
     }
 
     @Override
@@ -151,7 +155,6 @@ public class NBModuleNode extends AbstractNode {
         return moduleInfo.getDisplayName();
     }
 
-    
     @Override
     public Image getOpenedIcon(int type) {
         return ImageUtilities.loadImage("org/nbdemo/introspection/resources/module.png");
@@ -160,6 +163,11 @@ public class NBModuleNode extends AbstractNode {
     @Override
     public Image getIcon(int type) {
         return ImageUtilities.loadImage("org/nbdemo/introspection/resources/module.png");
+    }
+
+    @Override
+    public Node.PropertySet[] getPropertySets() {
+        return properties.getPropertySets();
     }
 
 }

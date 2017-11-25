@@ -18,8 +18,11 @@ package org.nbdemo.introspection.gui.module;
 import org.openide.modules.ModuleInfo;
 
 /**
- *
- * @author antonio
+ * Objects of type "ModuleInfo" cannot be put in the Lookup, otherwise
+ * NetBeans would get confused. 
+ * This class wraps a "ModuleInfo" so that NetBeans is not confused.
+ * "ModuleInfoContainer" is stored in the lookup of NBDemoModuleTopComponent
+ * module windows, so that the same window is always opened for a given module.
  */
 public class ModuleInfoContainer {
     

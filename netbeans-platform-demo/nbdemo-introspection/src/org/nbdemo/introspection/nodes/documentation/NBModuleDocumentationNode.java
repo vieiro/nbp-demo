@@ -27,7 +27,9 @@ import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 
 /**
- *
+ * A node holding documentation for a module.
+ * TODO: This should include hyperlinks for the API, other documentation links
+ * and tutorials.
  */
 public class NBModuleDocumentationNode extends AbstractNode {
 

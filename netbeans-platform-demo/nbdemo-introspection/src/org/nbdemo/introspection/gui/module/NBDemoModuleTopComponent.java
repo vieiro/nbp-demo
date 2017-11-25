@@ -17,8 +17,9 @@ package org.nbdemo.introspection.gui.module;
 
 import java.awt.BorderLayout;
 import org.nbdemo.introspection.ModuleDependencyType;
-import org.nbdemo.introspection.nodes.dependencies.NBModuleDependenciesByTypeNode;
-import org.nbdemo.introspection.nodes.dependencies.NBModuleModuleDependencyEntry;
+import org.nbdemo.introspection.nodes.ModuleProperties;
+import org.nbdemo.introspection.nodes.dependencies.modules.ModuleDependencyTypeModuleListNode;
+import org.nbdemo.introspection.nodes.dependencies.modules.ModuleDependencyTypeModuleNode;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -35,7 +36,9 @@ import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.ProxyLookup;
 
 /**
- * Top component which displays something.
+ * Displays a module.
+ * This contains basic information about the module as well
+ * as a list of dependencies.
  */
 @ConvertAsProperties(
         dtd = "-//org.nbdemo.introspection.gui.module//NBDemoModule//EN",
@@ -48,7 +51,7 @@ import org.openide.util.lookup.ProxyLookup;
 )
 @TopComponent.Registration(mode = "editor", openAtStartup = false)
 @ActionID(category = "Window", id = "org.nbdemo.introspection.gui.module.NBDemoModuleTopComponent")
-@ActionReference(path = "Menu/Window" /*, position = 333 */)
+// @ActionReference(path = "Menu/Window" /*, position = 333 */)
 @TopComponent.OpenActionRegistration(
         displayName = "#CTL_NBDemoModuleAction",
         preferredID = "NBDemoModuleTopComponent"
@@ -77,17 +80,18 @@ public final class NBDemoModuleTopComponent extends TopComponent implements Expl
                 new AbstractLookup(instanceContent),
                 ExplorerUtils.createLookup(explorerManager, getActionMap()));
         associateLookup(compoundLookup);
-        outlineView = new OutlineView();
+        outlineView = new OutlineView("Dependencies");
         pnlDependencies.add(outlineView, BorderLayout.CENTER);
         outlineView.getOutline().setRootVisible(false);
         outlineView.getOutline().setShowGrid(true);
-        // @see NBModuleModuleDependencyEntry for a list of properties.
+        
+        // @see ModuleDependencyTypeModuleNode for a list of properties.
         outlineView.setPropertyColumns(
-                NBModuleModuleDependencyEntry.PROP_MODULENAME, "Module", // TODO: I18N
-                NBModuleModuleDependencyEntry.PROP_CODENAMEBASE, "Code Base Name", // TODO: I18N
-                NBModuleModuleDependencyEntry.PROP_SPECIFICATIONVERSION, "API Version", // TODO: I18N
-                NBModuleModuleDependencyEntry.PROP_COMPARISON, "Type" // TODO: I18N
+                ModuleProperties.PROP_CODENAMEBASE, "Code name base",
+                ModuleProperties.PROP_APIVERSION, "API version",
+                ModuleProperties.PROP_IMPLVERSION, "Impl. version"
         );
+
     }
     
     public void setModuleInfo(ModuleInfo moduleInfo) {
@@ -113,7 +117,7 @@ public final class NBDemoModuleTopComponent extends TopComponent implements Expl
             setDisplayName(moduleInfo.getDisplayName());
             setToolTipText(moduleInfo.getDisplayName());
             instanceContent.add(moduleInfoContainer);
-            this.moduleModuleDependenciesNode = new NBModuleDependenciesByTypeNode(moduleInfo, ModuleDependencyType.MODULE);
+            this.moduleModuleDependenciesNode = new ModuleDependencyTypeModuleListNode(moduleInfo);
         }
         explorerManager.setRootContext(this.moduleModuleDependenciesNode);
     }

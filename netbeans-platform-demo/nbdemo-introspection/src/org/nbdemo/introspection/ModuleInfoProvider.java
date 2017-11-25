@@ -13,28 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.nbdemo.introspection.documentation;
+package org.nbdemo.introspection;
 
-import java.util.Map;
-import java.util.TreeMap;
+import org.openide.modules.ModuleInfo;
 
 /**
- * Non API-Public class that maps strings (module code name base) to module documentation.
- * This is work in progress.
- * @see ModuleDocumentation
+ * An object that contains a ModuleInfo
+ * @author Antonio Vieiro (antonio@vieiro.net)
  */
-public class AllModulesDocumentation {
-    private Map<String, ModuleDocumentation> modules;
-
-    public AllModulesDocumentation() {
-        modules = new TreeMap<>();
-    }
-    public Map<String, ModuleDocumentation> getModules() {
-        return modules;
-    }
-
-    public void setModules(Map<String, ModuleDocumentation> modules) {
-        this.modules = modules;
-    }
-    
+public interface ModuleInfoProvider {
+    public ModuleInfo getModuleInfo();
 }

@@ -17,7 +17,6 @@ package org.nbdemo.introspection.documentation;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,7 +27,8 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
 /**
- *
+ * Reads 'module-documentation.yml' and creates AllModulesDocumentation. TODO:
+ * This is work in progress.
  */
 public class ModuleDocumentationHandler {
 
@@ -40,7 +40,7 @@ public class ModuleDocumentationHandler {
         }
         return instance;
     }
-    
+
     private AllModulesDocumentation documentation;
 
     private ModuleDocumentationHandler() {
@@ -67,10 +67,10 @@ public class ModuleDocumentationHandler {
         }
         /*
         Populate any possible missing modules
-        */
+         */
         Collection<? extends ModuleInfo> allModules = Lookup.getDefault().lookupAll(ModuleInfo.class);
 
-        allModules.stream().forEach( (moduleInfo) -> {
+        allModules.stream().forEach((moduleInfo) -> {
             String key = moduleInfo.getCodeNameBase();
             ModuleDocumentation moduleDocumentation = documentation.getModules().get(key);
             if (moduleDocumentation == null) {
@@ -79,11 +79,11 @@ public class ModuleDocumentationHandler {
                 documentation.getModules().put(key, moduleDocumentation);
             }
         });
-        
+
         /*
         Print out the result. This was used to create the original documentation.yml file.
         THis is kept here just in case it's required to regenerate this file, either in part or in full.
-        */
+         */
 //        Yaml yaml = new Yaml();
 //        StringWriter out = new StringWriter(32*1024);
 //        yaml.dump(documentation, out);
@@ -94,12 +94,10 @@ public class ModuleDocumentationHandler {
 //        }
 //        Logger.getLogger(getClass().getName()).log(Level.INFO, "MODULE DOCUMENTATION:");
 //        Logger.getLogger(getClass().getName()).log(Level.INFO, out.toString());
-        
     }
 
     public AllModulesDocumentation getDocumentation() {
         return documentation;
     }
 
-    
 }

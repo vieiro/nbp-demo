@@ -13,37 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.nbdemo.introspection.nodes.dependencies;
+package org.nbdemo.introspection.nodes.dependencies.java;
 
 import java.awt.Image;
 import org.openide.modules.Dependency;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.util.ImageUtilities;
-import org.openide.util.lookup.AbstractLookup;
-import org.openide.util.lookup.InstanceContent;
+import org.openide.util.Lookup;
 
 /**
- * Represents a dependency node (such as a Java dependency to 1.6, for instance)
+ * Represents a Dependency.TYPE_JAVA
+ * @author Antonio Vieiro (antonio@vieiro.net)
  */
-public class NBModuleDependencyEntry extends AbstractNode {
-
-    private Dependency dependency;
-    private InstanceContent instanceContent;
+public class ModuleDependencyTypeJavaNode extends AbstractNode {
+    private Dependency java;
     
-    public NBModuleDependencyEntry(Dependency dependency) {
-        this(dependency, new InstanceContent());
-    }
-    
-    private NBModuleDependencyEntry(Dependency dependency, InstanceContent instanceContent) {
-        super(Children.LEAF, new AbstractLookup(instanceContent));
-        this.dependency = dependency;
-        this.instanceContent = instanceContent;
+    public ModuleDependencyTypeJavaNode(Dependency javaDependency) {
+        super(Children.LEAF, Lookup.EMPTY);
+        this.java = javaDependency;
     }
 
     @Override
     public String getDisplayName() {
-        return dependency.getName() + " " + dependency.getVersion();
+        return java.toString();
     }
     @Override
     public Image getOpenedIcon(int type) {
@@ -53,6 +46,5 @@ public class NBModuleDependencyEntry extends AbstractNode {
     @Override
     public Image getIcon(int type) {
         return ImageUtilities.loadImage("org/nbdemo/introspection/resources/Hyperlink.png");
-    }    
-    
+    }
 }

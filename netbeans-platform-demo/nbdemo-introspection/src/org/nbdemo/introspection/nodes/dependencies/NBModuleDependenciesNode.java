@@ -19,6 +19,9 @@ import java.awt.Image;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.nbdemo.introspection.ModuleDependencyType;
+import org.nbdemo.introspection.nodes.dependencies.java.ModuleDependencyTypeJavaNode;
+import org.nbdemo.introspection.nodes.dependencies.modules.ModuleDependencyTypeModuleNode;
+import org.nbdemo.introspection.nodes.dependencies.modules.ModuleDependencyTypeModuleListNode;
 import org.openide.modules.Dependency;
 import org.openide.modules.ModuleInfo;
 import org.openide.nodes.AbstractNode;
@@ -31,11 +34,12 @@ import org.openide.util.lookup.InstanceContent;
 
 /**
  * List dependencies of a given module.
- *
- * @author Antonio vieiro@apache.org
  */
 public class NBModuleDependenciesNode extends AbstractNode {
 
+    /**
+     * Dependencies grouped by dependency type.
+     */
     private static class NBModuleDependenciesChildren extends Children.Keys<ModuleDependencyType> {
 
         private ModuleInfo moduleInfo;
@@ -52,16 +56,24 @@ public class NBModuleDependenciesNode extends AbstractNode {
 
         @Override
         protected Node[] createNodes(ModuleDependencyType dependencyType) {
-            List<Dependency> dependencies = moduleInfo.getDependencies().stream().filter((p) -> {
-                return p.getType() == dependencyType.getType();
-            }).collect(Collectors.toList());
 
-            return dependencies.isEmpty() ? new Node[0]
-                    : new Node[]{new NBModuleDependenciesByTypeNode(dependencyType, dependencies)};
+            if (dependencyType == ModuleDependencyType.MODULE) {
+                return new Node[]{new ModuleDependencyTypeModuleListNode(moduleInfo)};
+            }
+
+            if (dependencyType == ModuleDependencyType.JAVA) {
+                List<ModuleDependencyTypeJavaNode> javaNodes = moduleInfo.getDependencies().stream().filter((p) -> {
+                    return p.getType() == Dependency.TYPE_JAVA;
+                }).sorted((d1, d2) -> {
+                    return d1.getVersion().compareTo(d2.getVersion());
+                }).map((d) -> {
+                    return new ModuleDependencyTypeJavaNode(d);
+                }).collect(Collectors.toList());
+                return javaNodes.toArray(new ModuleDependencyTypeJavaNode[javaNodes.size()]);
+            }
+            return new Node[0];
         }
-
     }
-
     private ModuleInfo moduleInfo;
     private InstanceContent instanceContent;
 
@@ -79,6 +91,7 @@ public class NBModuleDependenciesNode extends AbstractNode {
     public String getDisplayName() {
         return NbBundle.getMessage(getClass(), "DEPENDENCIES"); // NOI18N
     }
+
     @Override
     public Image getOpenedIcon(int type) {
         return ImageUtilities.loadImage("org/nbdemo/introspection/resources/Hyperlink.png");

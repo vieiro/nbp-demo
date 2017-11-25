@@ -24,11 +24,10 @@ import org.openide.util.NbBundle;
 
 /**
  * Module dependency types. With display names and other features.
- *
- * @author Antonio Vieiro <antonio@vieiro.net>
  */
 public enum ModuleDependencyType {
 
+    // NetBeans keeps formatting this in a single line :-(
     IDE(Dependency.TYPE_IDE), JAVA(Dependency.TYPE_JAVA), MODULE(Dependency.TYPE_MODULE), PACKAGE(Dependency.TYPE_PACKAGE), NEEDS(Dependency.TYPE_NEEDS), RECOMMENDS(Dependency.TYPE_RECOMMENDS), REQUIRES(Dependency.TYPE_REQUIRES);
     private int type;
 
