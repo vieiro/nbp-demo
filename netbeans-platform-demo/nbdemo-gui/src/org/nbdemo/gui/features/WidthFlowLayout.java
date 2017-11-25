@@ -65,7 +65,6 @@ public class WidthFlowLayout implements LayoutManager {
                 maxY = Math.max(maxY, y + cd.height);
                 rowHeight = cd.height;
             } else {
-                System.out.println(i + " " + x + " " + y + " " + cd.width + " " + cd.height);
                 maxX = Math.max(maxX, x + cd.width);
                 maxY = Math.max(maxY, y + cd.height);
                 x = x + cd.width;
