@@ -30,13 +30,13 @@ import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 
 /**
- * ModuleDependencyTypeModuleListNode holds all the module dependencies for a
+ * ModuleDependencyInvertedTypeModuleListNode holds all the inverted module dependencies for a
  * module.
  *
  * @see Dependency
  * @author Antonio Vieiro (antonio@vieiro.net)
  */
-public class ModuleDependencyTypeModuleListNode extends AbstractNode {
+public class ModuleDependencyInvertedTypeModuleListNode extends AbstractNode {
 
     private static class NBModuleModuleDependenciesNodeChildren extends ChildFactory<ModuleModuleDependency> {
 
@@ -48,7 +48,7 @@ public class ModuleDependencyTypeModuleListNode extends AbstractNode {
 
         @Override
         protected boolean createKeys(List<ModuleModuleDependency> toPopulate) {
-            toPopulate.addAll(InstalledModules.moduleDependencies(moduleInfo));
+            toPopulate.addAll(InstalledModules.invertedModuleDependencies(moduleInfo));
             return true;
         }
 
@@ -61,20 +61,20 @@ public class ModuleDependencyTypeModuleListNode extends AbstractNode {
                 return new Node[0];
             } else if (ntargets == 1) {
                 // In case we have a single node then just add it
-                return new Node[]{new ResolvedModuleModuleNode(key.getSource(), key.getDependency(), key.getTargets().get(0), true)};
+                return new Node[]{new ResolvedModuleModuleNode(key.getSource(), key.getDependency(), key.getTargets().get(0), false)};
             }
-            return new Node[]{new ModuleDependencyTypeModuleNode(key, true)};
+            return new Node[]{new ModuleDependencyTypeModuleNode(key, false)};
         }
     }
 
     private ModuleInfo moduleInfo;
     private InstanceContent instanceContent;
 
-    public ModuleDependencyTypeModuleListNode(ModuleInfo moduleInfo) {
+    public ModuleDependencyInvertedTypeModuleListNode(ModuleInfo moduleInfo) {
         this(moduleInfo, new InstanceContent());
     }
 
-    private ModuleDependencyTypeModuleListNode(ModuleInfo moduleInfo, InstanceContent instanceContent) {
+    private ModuleDependencyInvertedTypeModuleListNode(ModuleInfo moduleInfo, InstanceContent instanceContent) {
         super(Children.create(new NBModuleModuleDependenciesNodeChildren(moduleInfo), true), new AbstractLookup(instanceContent));
         this.moduleInfo = moduleInfo;
         this.instanceContent = instanceContent;

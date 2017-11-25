@@ -15,6 +15,7 @@
  */package org.nbdemo.introspection;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +26,7 @@ import org.openide.modules.Dependency;
 import org.openide.modules.ModuleInfo;
 
 /**
- * Maintains an adjacency matrix between modules (adjacencyMatrix of type
+ * Maintains an adjacency matrix between modules (directDependencies of type
  * Dependency.TYPE_MODULE).
  *
  * @see Dependency
@@ -33,19 +34,24 @@ import org.openide.modules.ModuleInfo;
 class Module2ModuleAdjacencyMatrix {
 
     /**
-     * Maps module-code-name-base to a graph's node index.
+     * Maps module-code-name-base to a graph's node sourceNodeIndex.
      */
     private HashMap<String, Integer> codeNameBase2NodeIndex;
 
     /**
-     * Maps a node index to a ModuleInfo
+     * Maps a node sourceNodeIndex to a ModuleInfo
      */
     private List<ModuleInfo> graphNodes;
 
     /**
      * Dependency matrix.
      */
-    private ModuleModuleDependency[][] adjacencyMatrix;
+    private List<ModuleModuleDependency>[][] directDependencies;
+
+    /**
+     * Inverted dependency matrix.
+     */
+    private List<ModuleModuleDependency>[][] invertedDependencies;
 
     /**
      * Constructs an adjacency matrix
@@ -57,55 +63,69 @@ class Module2ModuleAdjacencyMatrix {
         codeNameBase2NodeIndex = new HashMap<>();
         graphNodes = new ArrayList<>(modules);
         int nmodules = modules.size();
-        adjacencyMatrix = new ModuleModuleDependency[nmodules][nmodules];
+        directDependencies = new List[nmodules][nmodules];
+        invertedDependencies = new List[nmodules][nmodules];
 
-        for (int nodeIndex = 0; nodeIndex < nmodules; nodeIndex++) {
-            ModuleInfo moduleInfo = modules.get(nodeIndex);
-            codeNameBase2NodeIndex.put(moduleInfo.getCodeNameBase(), nodeIndex);
+        for (int sourceNodeIndex = 0; sourceNodeIndex < nmodules; sourceNodeIndex++) {
+            ModuleInfo sourceNode = modules.get(sourceNodeIndex);
+            codeNameBase2NodeIndex.put(sourceNode.getCodeNameBase(), sourceNodeIndex);
         }
 
-        for (int nodeIndex = 0; nodeIndex < nmodules; nodeIndex++) {
-            ModuleInfo moduleInfo = modules.get(nodeIndex);
-            List<Dependency> moduleDependencies = moduleInfo.getDependencies().stream().filter((d) -> {
+        for (int sourceNodeIndex = 0; sourceNodeIndex < nmodules; sourceNodeIndex++) {
+            ModuleInfo sourceModule = modules.get(sourceNodeIndex);
+            List<Dependency> moduleDependencies = sourceModule.getDependencies().stream().filter((d) -> {
                 return d.getType() == Dependency.TYPE_MODULE;
             }).collect(Collectors.toList());
-            for (Dependency moduleDependency : moduleDependencies) {
-                String otherModuleCodeNameBase = moduleDependency.getName();
-                // "otherModuleCodeNameBase" is a string of the form "org.netbeans.api.progress/1".
+            for (Dependency dependency : moduleDependencies) {
+                String targetModuleCodeNameBase = dependency.getName();
+                // "targetModuleCodeNameBase" is a string of the form "org.netbeans.api.progress/1".
                 // we just want the codename base "org.netbeans.api.progress", and not the rest.
-                int i = otherModuleCodeNameBase.indexOf('/');
+                int i = targetModuleCodeNameBase.indexOf('/');
                 if (i != -1) {
-                    otherModuleCodeNameBase = otherModuleCodeNameBase.substring(0, i);
+                    targetModuleCodeNameBase = targetModuleCodeNameBase.substring(0, i);
                 }
-                Integer otherModuleNodeIndex = codeNameBase2NodeIndex.get(otherModuleCodeNameBase);
-                if (otherModuleNodeIndex == null) {
-                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, moduleInfo.getCodeNameBase() + " depends on '" + otherModuleCodeNameBase + "' but this module could not be found.");
+                Integer targetModuleIndex = codeNameBase2NodeIndex.get(targetModuleCodeNameBase);
+                if (targetModuleIndex == null) {
+                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, "{0} depends on ''{1}'' but this module could not be found.",
+                            new Object[]{sourceModule.getCodeNameBase(), targetModuleCodeNameBase});
                 } else {
-                    ModuleInfo otherModule = graphNodes.get(otherModuleNodeIndex);
-                    adjacencyMatrix[nodeIndex][otherModuleNodeIndex] = new ModuleModuleDependency(moduleInfo, moduleDependency, otherModule);
+                    ModuleInfo targetModule = graphNodes.get(targetModuleIndex);
+                    List<ModuleModuleDependency> directDependency = directDependencies[sourceNodeIndex][targetModuleIndex];
+                    if (directDependency == null) {
+                        directDependency = new ArrayList<>();
+                        directDependencies[sourceNodeIndex][targetModuleIndex] = directDependency;
+                    }
+                    directDependency.add(new ModuleModuleDependency(sourceModule, dependency, targetModule));
+
+                    List<ModuleModuleDependency> inverseDependency = invertedDependencies[targetModuleIndex][sourceNodeIndex];
+                    if (inverseDependency == null) {
+                        inverseDependency = new ArrayList<>();
+                        invertedDependencies[sourceNodeIndex][targetModuleIndex] = inverseDependency;
+                    }
+                    inverseDependency.add(new ModuleModuleDependency(sourceModule, dependency, targetModule));
                 }
             }
         }
     }
 
     /**
-     * Returns all modules on which module depends.
+     * Returns all modules on which sourceNode depends.
      *
-     * @param module The module.
-     * @return A list (sorted by display name) on which module depends.
+     * @param sourceNode The sourceNode.
+     * @return A list (sorted by display name) on which sourceNode depends.
      */
-    public List<ModuleModuleDependency> dependenciesOf(ModuleInfo module) {
-        Integer index = codeNameBase2NodeIndex.get(module.getCodeNameBase());
-        if (index == null) {
+    public List<ModuleModuleDependency> dependenciesOf(ModuleInfo sourceNode) {
+        Integer sourceNodeIndex = codeNameBase2NodeIndex.get(sourceNode.getCodeNameBase());
+        if (sourceNodeIndex == null) {
             return Collections.<ModuleModuleDependency>emptyList();
         }
-        ArrayList<ModuleModuleDependency> dependencyModules = new ArrayList<>();
-        for (int i = 0; i < this.adjacencyMatrix.length; i++) {
-            if (adjacencyMatrix[index][i] != null) {
-                dependencyModules.add(adjacencyMatrix[index][i]);
+        ArrayList<ModuleModuleDependency> result = new ArrayList<>();
+        for (int targetNodeIndex = 0; targetNodeIndex < directDependencies.length; targetNodeIndex++) {
+            if (directDependencies[sourceNodeIndex][targetNodeIndex] != null) {
+                result.addAll(directDependencies[sourceNodeIndex][targetNodeIndex]);
             }
         }
-        dependencyModules.sort( (d1, d2) -> {
+        result.sort((d1, d2) -> {
             int n1 = d1.getTargets().size();
             int n2 = d2.getTargets().size();
             int c = Integer.compare(n1, n2);
@@ -114,8 +134,39 @@ class Module2ModuleAdjacencyMatrix {
             }
             return c;
         });
-        
-        return dependencyModules;
+
+        return result;
+    }
+
+    /**
+     * Returns all modules that use the given targetModule.
+     *
+     * @param targetModule A targetModule.
+     * @return A list of all ModuleModuleDependency which target contains the
+ given targetModule.
+     */
+    public List<ModuleModuleDependency> invertedDepdendenciesOf(ModuleInfo targetModule) {
+        Integer targetIndex = codeNameBase2NodeIndex.get(targetModule.getCodeNameBase());
+        if (targetIndex == null) {
+            return Collections.<ModuleModuleDependency>emptyList();
+        }
+        ArrayList<ModuleModuleDependency> result = new ArrayList<>();
+        for (int sourceNodeIndex = 0; sourceNodeIndex < invertedDependencies.length; sourceNodeIndex++) {
+            if (directDependencies[sourceNodeIndex][targetIndex] != null) {
+                result.addAll(directDependencies[sourceNodeIndex][targetIndex]);
+            }
+        }
+        result.sort((d1, d2) -> {
+            int n1 = d1.getTargets().size();
+            int n2 = d2.getTargets().size();
+            int c = Integer.compare(n1, n2);
+            if (c == 0 && n1 > 0) {
+                return d1.getTargets().get(0).getDisplayName().compareTo(d2.getTargets().get(0).getDisplayName());
+            }
+            return c;
+        });
+
+        return result;
     }
 
 }

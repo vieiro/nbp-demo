@@ -16,7 +16,6 @@
 package org.nbdemo.introspection.nodes.dependencies.modules;
 
 import java.awt.Image;
-import java.lang.reflect.InvocationTargetException;
 import org.nbdemo.introspection.ModuleInfoProvider;
 import org.nbdemo.introspection.nodes.ModuleProperties;
 import org.openide.modules.Dependency;
@@ -24,7 +23,6 @@ import org.openide.modules.ModuleInfo;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
-import org.openide.nodes.PropertySupport;
 import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
@@ -40,27 +38,36 @@ public final class ResolvedModuleModuleNode extends AbstractNode implements Modu
     private Dependency dependency;
     private InstanceContent instanceContent;
     private ModuleProperties properties;
+    private boolean directDependency;
 
-    public ResolvedModuleModuleNode(ModuleInfo source, Dependency dependency, ModuleInfo target) {
-        this(source, dependency, target, new InstanceContent());
+    /**
+     * A node that represents a relationship between 'source' and 'target', though 'dependency'
+     * @param source The source node of the dependency.
+     * @param dependency The dependency.
+     * @param target The target node of the dependency.
+     * @param directDependency True to display the target node, false to display the source node.
+     */
+    public ResolvedModuleModuleNode(ModuleInfo source, Dependency dependency, ModuleInfo target, boolean directDependency) {
+        this(source, dependency, target, directDependency, new InstanceContent());
     }
 
-    private ResolvedModuleModuleNode(ModuleInfo source, Dependency dependency, ModuleInfo target, InstanceContent instanceContent) {
+    private ResolvedModuleModuleNode(ModuleInfo source, Dependency dependency, ModuleInfo target, boolean directDependency, InstanceContent instanceContent) {
         super(Children.LEAF, new AbstractLookup(instanceContent));
         this.source = source;
         this.dependency = dependency;
         this.target = target;
+        this.directDependency = directDependency;
         this.properties = new ModuleProperties(this);
     }
 
     @Override
     public ModuleInfo getModuleInfo() {
-        return target;
+        return directDependency ? target : source;
     }
 
     @Override
     public String getDisplayName() {
-        return target.getDisplayName();
+        return getModuleInfo().getDisplayName();
     }
 
     @Override

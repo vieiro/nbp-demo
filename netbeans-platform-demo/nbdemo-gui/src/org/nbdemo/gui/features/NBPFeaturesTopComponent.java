@@ -15,6 +15,8 @@
  */
 package org.nbdemo.gui.features;
 
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.IOException;
@@ -60,6 +62,7 @@ public final class NBPFeaturesTopComponent extends TopComponent {
 
     public NBPFeaturesTopComponent() {
         initComponents();
+        cardContainer.setLayout(new WidthFlowLayout(scrollPane));
         setName(Bundle.CTL_NBPFeaturesTopComponent());
         setToolTipText(Bundle.HINT_NBPFeaturesTopComponent());
     }
@@ -78,9 +81,6 @@ public final class NBPFeaturesTopComponent extends TopComponent {
         setLayout(new java.awt.BorderLayout());
 
         scrollPane.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        scrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-        cardContainer.setPreferredSize(new java.awt.Dimension(480, 1024));
         scrollPane.setViewportView(cardContainer);
 
         add(scrollPane, java.awt.BorderLayout.CENTER);
@@ -90,6 +90,7 @@ public final class NBPFeaturesTopComponent extends TopComponent {
     private javax.swing.JPanel cardContainer;
     private javax.swing.JScrollPane scrollPane;
     // End of variables declaration//GEN-END:variables
+
     @Override
     public void componentOpened() {
 
@@ -100,21 +101,29 @@ public final class NBPFeaturesTopComponent extends TopComponent {
                 Exceptions.printStackTrace(ex);
                 featureList = new NetBeansPlatformFeatureList();
             }
-            cards = new ArrayList<ModuleCardPanel>();
+            cards = new ArrayList<>();
             for (NetBeansPlatformFeature feature : featureList.getFeatures()) {
                 ModuleCardPanel card = new ModuleCardPanel();
-                cards.add(card);
                 card.setFeature(feature);
+                cards.add(card);
                 cardContainer.add(card);
             }
         }
         scrollPane.scrollRectToVisible(new Rectangle(new Point(0, 0)));
     }
 
-    @Override
-    public void componentClosed() {
-        // TODO add custom code on component closing
+    public void doLayout() {
+        // cardContainer.setMinimumSize(new Dimension(scrollPane.getWidth(), 4));
+        // cardContainer.getParent().setMaximumSize(new Dimension(scrollPane.getWidth(), 4096));
+        // System.out.println("PARENT " + cardContainer.getParent());
+        // scrollPane.getViewport().setMaximumSize(new Dimension(scrollPane.getWidth(), 4096));
+        //cardContainer.getParent().doLayout();
+        cardContainer.doLayout();;
+        super.doLayout();
+        System.out.println("Features top component layout final size " + getWidth());
     }
+    
+    
 
     void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at

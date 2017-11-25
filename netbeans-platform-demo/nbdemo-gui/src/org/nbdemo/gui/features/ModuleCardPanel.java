@@ -58,6 +58,7 @@ public class ModuleCardPanel extends javax.swing.JPanel {
 
         cardImage.setBackground(new java.awt.Color(0, 0, 0));
         org.openide.awt.Mnemonics.setLocalizedText(cardImage, org.openide.util.NbBundle.getMessage(ModuleCardPanel.class, "ModuleCardPanel.cardImage.text")); // NOI18N
+        cardImage.setMaximumSize(new java.awt.Dimension(480, 270));
         cardImage.setMinimumSize(new java.awt.Dimension(480, 270));
         cardImage.setPreferredSize(new java.awt.Dimension(480, 270));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -137,5 +138,8 @@ public class ModuleCardPanel extends javax.swing.JPanel {
         txtTitle.setText(feature.getTitle());
         txtSubtitle.setText(feature.getSubtitle());
         txtDescription.setText(feature.getDescription());
+        setToolTipText(feature.getSubtitle());
+        txtSubtitle.setToolTipText(feature.getSubtitle());
+        txtDescription.setToolTipText(feature.getSubtitle());
     }
 }

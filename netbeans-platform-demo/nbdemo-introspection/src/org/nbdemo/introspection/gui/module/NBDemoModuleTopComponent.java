@@ -16,18 +16,8 @@
 package org.nbdemo.introspection.gui.module;
 
 import java.awt.BorderLayout;
-import org.nbdemo.introspection.ModuleDependencyType;
-import org.nbdemo.introspection.nodes.ModuleProperties;
-import org.nbdemo.introspection.nodes.dependencies.modules.ModuleDependencyTypeModuleListNode;
-import org.nbdemo.introspection.nodes.dependencies.modules.ModuleDependencyTypeModuleNode;
-import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
-import org.openide.awt.ActionReference;
-import org.openide.explorer.ExplorerManager;
-import org.openide.explorer.ExplorerUtils;
-import org.openide.explorer.view.OutlineView;
 import org.openide.modules.ModuleInfo;
-import org.openide.nodes.Node;
 import org.openide.util.Lookup;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
@@ -40,10 +30,6 @@ import org.openide.util.lookup.ProxyLookup;
  * This contains basic information about the module as well
  * as a list of dependencies.
  */
-@ConvertAsProperties(
-        dtd = "-//org.nbdemo.introspection.gui.module//NBDemoModule//EN",
-        autostore = false
-)
 @TopComponent.Description(
         preferredID = "NBDemoModuleTopComponent",
         //iconBase="SET/PATH/TO/ICON/HERE", 
@@ -61,37 +47,33 @@ import org.openide.util.lookup.ProxyLookup;
     "CTL_NBDemoModuleTopComponent=NBDemoModule Window",
     "HINT_NBDemoModuleTopComponent=Module detail"
 })
-public final class NBDemoModuleTopComponent extends TopComponent implements ExplorerManager.Provider {
+public final class NBDemoModuleTopComponent extends TopComponent {
     
     private ModuleInfoContainer moduleInfoContainer;
     private InstanceContent instanceContent;
-    private Node moduleModuleDependenciesNode;
-    private ExplorerManager explorerManager;
-    private OutlineView outlineView;
+    private DirectDependenciesPanel directDependenciesPanel;
+    private InverseDependenciesPanel inverseDependenciesPanel;
 
     public NBDemoModuleTopComponent() {
         initComponents();
         setName(Bundle.CTL_NBDemoModuleTopComponent());
         setToolTipText(Bundle.HINT_NBDemoModuleTopComponent());
-        explorerManager = new ExplorerManager();
         instanceContent = new InstanceContent();
-
-        Lookup compoundLookup = new ProxyLookup(
-                new AbstractLookup(instanceContent),
-                ExplorerUtils.createLookup(explorerManager, getActionMap()));
-        associateLookup(compoundLookup);
-        outlineView = new OutlineView("Dependencies");
-        pnlDependencies.add(outlineView, BorderLayout.CENTER);
-        outlineView.getOutline().setRootVisible(false);
-        outlineView.getOutline().setShowGrid(true);
         
-        // @see ModuleDependencyTypeModuleNode for a list of properties.
-        outlineView.setPropertyColumns(
-                ModuleProperties.PROP_CODENAMEBASE, "Code name base",
-                ModuleProperties.PROP_APIVERSION, "API version",
-                ModuleProperties.PROP_IMPLVERSION, "Impl. version"
+        
+        directDependenciesPanel = new DirectDependenciesPanel();
+        pnlDependencyTypeModule.add(directDependenciesPanel, BorderLayout.CENTER);
+        
+        inverseDependenciesPanel = new InverseDependenciesPanel();
+        pnlDependencyTypeModuleInverted.add(inverseDependenciesPanel, BorderLayout.CENTER);
+        
+        Lookup lookup = new ProxyLookup(
+                new AbstractLookup(instanceContent),
+                directDependenciesPanel.getLookup(),
+                inverseDependenciesPanel.getLookup()
         );
-
+        associateLookup(lookup);
+        
     }
     
     public void setModuleInfo(ModuleInfo moduleInfo) {
@@ -108,7 +90,6 @@ public final class NBDemoModuleTopComponent extends TopComponent implements Expl
             txtImplementationVersion.setText("");
             setToolTipText("No module");
             setDisplayName("No module");
-            this.moduleModuleDependenciesNode = Node.EMPTY;
         } else {
             txtDisplayName.setText(moduleInfo.getDisplayName());
             txtCodeNameBase.setText(moduleInfo.getCodeNameBase());
@@ -117,14 +98,9 @@ public final class NBDemoModuleTopComponent extends TopComponent implements Expl
             setDisplayName(moduleInfo.getDisplayName());
             setToolTipText(moduleInfo.getDisplayName());
             instanceContent.add(moduleInfoContainer);
-            this.moduleModuleDependenciesNode = new ModuleDependencyTypeModuleListNode(moduleInfo);
         }
-        explorerManager.setRootContext(this.moduleModuleDependenciesNode);
-    }
-
-    @Override
-    public ExplorerManager getExplorerManager() {
-        return explorerManager;
+        directDependenciesPanel.setModuleInfo(moduleInfo);
+        inverseDependenciesPanel.setModuleInfo(moduleInfo);
     }
 
     
@@ -132,93 +108,61 @@ public final class NBDemoModuleTopComponent extends TopComponent implements Expl
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jPanel1 = new javax.swing.JPanel();
+        pnlNames = new javax.swing.JPanel();
         lblDisplayName = new javax.swing.JLabel();
         txtDisplayName = new javax.swing.JTextField();
         lblCodeNameBase = new javax.swing.JLabel();
         txtCodeNameBase = new javax.swing.JTextField();
+        pnlDetails = new javax.swing.JPanel();
         lblVersion = new javax.swing.JLabel();
         txtVersion = new javax.swing.JTextField();
         lblImplementationVersion = new javax.swing.JLabel();
         txtImplementationVersion = new javax.swing.JTextField();
-        pnlDependencies = new javax.swing.JPanel();
+        tabDependencies = new javax.swing.JTabbedPane();
+        pnlDependencyTypeModule = new javax.swing.JPanel();
+        pnlDependencyTypeModuleInverted = new javax.swing.JPanel();
 
         setLayout(new java.awt.GridBagLayout());
 
-        jPanel1.setLayout(new java.awt.GridBagLayout());
+        pnlNames.setLayout(new java.awt.GridBagLayout());
 
         org.openide.awt.Mnemonics.setLocalizedText(lblDisplayName, org.openide.util.NbBundle.getMessage(NBDemoModuleTopComponent.class, "NBDemoModuleTopComponent.lblDisplayName.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         gridBagConstraints.insets = new java.awt.Insets(8, 8, 8, 8);
-        jPanel1.add(lblDisplayName, gridBagConstraints);
+        pnlNames.add(lblDisplayName, gridBagConstraints);
 
         txtDisplayName.setEditable(false);
         txtDisplayName.setText(org.openide.util.NbBundle.getMessage(NBDemoModuleTopComponent.class, "NBDemoModuleTopComponent.txtDisplayName.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 5;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.weightx = 10.0;
         gridBagConstraints.insets = new java.awt.Insets(8, 8, 8, 8);
-        jPanel1.add(txtDisplayName, gridBagConstraints);
+        pnlNames.add(txtDisplayName, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(lblCodeNameBase, org.openide.util.NbBundle.getMessage(NBDemoModuleTopComponent.class, "NBDemoModuleTopComponent.lblCodeNameBase.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         gridBagConstraints.insets = new java.awt.Insets(8, 8, 8, 8);
-        jPanel1.add(lblCodeNameBase, gridBagConstraints);
+        pnlNames.add(lblCodeNameBase, gridBagConstraints);
 
         txtCodeNameBase.setEditable(false);
         txtCodeNameBase.setText(org.openide.util.NbBundle.getMessage(NBDemoModuleTopComponent.class, "NBDemoModuleTopComponent.txtCodeNameBase.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.weightx = 5.0;
         gridBagConstraints.insets = new java.awt.Insets(8, 8, 8, 8);
-        jPanel1.add(txtCodeNameBase, gridBagConstraints);
-
-        org.openide.awt.Mnemonics.setLocalizedText(lblVersion, org.openide.util.NbBundle.getMessage(NBDemoModuleTopComponent.class, "NBDemoModuleTopComponent.lblVersion.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
-        gridBagConstraints.insets = new java.awt.Insets(8, 8, 8, 8);
-        jPanel1.add(lblVersion, gridBagConstraints);
-
-        txtVersion.setEditable(false);
-        txtVersion.setText(org.openide.util.NbBundle.getMessage(NBDemoModuleTopComponent.class, "NBDemoModuleTopComponent.txtVersion.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(8, 8, 8, 8);
-        jPanel1.add(txtVersion, gridBagConstraints);
-
-        org.openide.awt.Mnemonics.setLocalizedText(lblImplementationVersion, org.openide.util.NbBundle.getMessage(NBDemoModuleTopComponent.class, "NBDemoModuleTopComponent.lblImplementationVersion.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(8, 8, 8, 8);
-        jPanel1.add(lblImplementationVersion, gridBagConstraints);
-
-        txtImplementationVersion.setEditable(false);
-        txtImplementationVersion.setText(org.openide.util.NbBundle.getMessage(NBDemoModuleTopComponent.class, "NBDemoModuleTopComponent.txtImplementationVersion.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(8, 8, 8, 8);
-        jPanel1.add(txtImplementationVersion, gridBagConstraints);
+        pnlNames.add(txtCodeNameBase, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -227,50 +171,88 @@ public final class NBDemoModuleTopComponent extends TopComponent implements Expl
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        add(jPanel1, gridBagConstraints);
+        add(pnlNames, gridBagConstraints);
 
-        pnlDependencies.setLayout(new java.awt.BorderLayout());
+        pnlDetails.setLayout(new java.awt.GridBagLayout());
+
+        org.openide.awt.Mnemonics.setLocalizedText(lblVersion, org.openide.util.NbBundle.getMessage(NBDemoModuleTopComponent.class, "NBDemoModuleTopComponent.lblVersion.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        gridBagConstraints.insets = new java.awt.Insets(8, 8, 8, 8);
+        pnlDetails.add(lblVersion, gridBagConstraints);
+
+        txtVersion.setEditable(false);
+        txtVersion.setText(org.openide.util.NbBundle.getMessage(NBDemoModuleTopComponent.class, "NBDemoModuleTopComponent.txtVersion.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(8, 8, 8, 8);
+        pnlDetails.add(txtVersion, gridBagConstraints);
+
+        org.openide.awt.Mnemonics.setLocalizedText(lblImplementationVersion, org.openide.util.NbBundle.getMessage(NBDemoModuleTopComponent.class, "NBDemoModuleTopComponent.lblImplementationVersion.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        gridBagConstraints.insets = new java.awt.Insets(8, 8, 8, 8);
+        pnlDetails.add(lblImplementationVersion, gridBagConstraints);
+
+        txtImplementationVersion.setEditable(false);
+        txtImplementationVersion.setText(org.openide.util.NbBundle.getMessage(NBDemoModuleTopComponent.class, "NBDemoModuleTopComponent.txtImplementationVersion.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(8, 8, 8, 8);
+        pnlDetails.add(txtImplementationVersion, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
         gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        add(pnlDetails, gridBagConstraints);
+
+        pnlDependencyTypeModule.setLayout(new java.awt.BorderLayout());
+        tabDependencies.addTab(org.openide.util.NbBundle.getMessage(NBDemoModuleTopComponent.class, "NBDemoModuleTopComponent.pnlDependencyTypeModule.TabConstraints.tabTitle"), pnlDependencyTypeModule); // NOI18N
+
+        pnlDependencyTypeModuleInverted.setLayout(new java.awt.BorderLayout());
+        tabDependencies.addTab(org.openide.util.NbBundle.getMessage(NBDemoModuleTopComponent.class, "NBDemoModuleTopComponent.pnlDependencyTypeModuleInverted.TabConstraints.tabTitle"), pnlDependencyTypeModuleInverted); // NOI18N
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
+        gridBagConstraints.weightx = 10.0;
         gridBagConstraints.weighty = 10.0;
-        add(pnlDependencies, gridBagConstraints);
+        add(tabDependencies, gridBagConstraints);
+        tabDependencies.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(NBDemoModuleTopComponent.class, "NBDemoModuleTopComponent.tabDependencies.AccessibleContext.accessibleName")); // NOI18N
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblCodeNameBase;
     private javax.swing.JLabel lblDisplayName;
     private javax.swing.JLabel lblImplementationVersion;
     private javax.swing.JLabel lblVersion;
-    private javax.swing.JPanel pnlDependencies;
+    private javax.swing.JPanel pnlDependencyTypeModule;
+    private javax.swing.JPanel pnlDependencyTypeModuleInverted;
+    private javax.swing.JPanel pnlDetails;
+    private javax.swing.JPanel pnlNames;
+    private javax.swing.JTabbedPane tabDependencies;
     private javax.swing.JTextField txtCodeNameBase;
     private javax.swing.JTextField txtDisplayName;
     private javax.swing.JTextField txtImplementationVersion;
     private javax.swing.JTextField txtVersion;
     // End of variables declaration//GEN-END:variables
-    @Override
-    public void componentOpened() {
-        // TODO add custom code on component opening
-    }
 
-    @Override
-    public void componentClosed() {
-        // TODO add custom code on component closing
-    }
-
-    void writeProperties(java.util.Properties p) {
-        // better to version settings since initial version as advocated at
-        // http://wiki.apidesign.org/wiki/PropertyFiles
-        p.setProperty("version", "1.0");
-        // TODO store your settings
-    }
-
-    void readProperties(java.util.Properties p) {
-        String version = p.getProperty("version");
-        // TODO read your settings according to their version
-    }
 }

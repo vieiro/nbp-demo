@@ -19,8 +19,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.nbdemo.introspection.documentation.AllModulesDocumentation;
 import org.nbdemo.introspection.documentation.ModuleDocumentationHandler;
@@ -29,7 +27,8 @@ import org.openide.modules.ModuleInfo;
 import org.openide.util.Lookup;
 
 /**
- * InstalledModules keeps information about all instaled modules in the platform.
+ * InstalledModules keeps information about all instaled modules in the
+ * platform.
  */
 public class InstalledModules {
 
@@ -37,6 +36,7 @@ public class InstalledModules {
 
     /**
      * The singleton antipattern, reloaded.
+     *
      * @return The single instance of this class.
      */
     public static synchronized InstalledModules getInstance() {
@@ -46,7 +46,7 @@ public class InstalledModules {
         return instance;
     }
 
-    /** 
+    /**
      * Modules sorted by display name.
      */
     private List<ModuleInfo> sortedByDisplayName;
@@ -55,8 +55,8 @@ public class InstalledModules {
      */
     private List<ModuleInfo> sortedByCodeNameBase;
     /**
-     * Map code-name-base to ModuleInfo.
-     * Each list should contain only a single module, of course.
+     * Map code-name-base to ModuleInfo. Each list should contain only a single
+     * module, of course.
      */
     private Map<String, List<ModuleInfo>> modulesByCodeNameBase;
     /**
@@ -85,6 +85,7 @@ public class InstalledModules {
 
     /**
      * All ModuleInfo sorted by displayName.
+     *
      * @return ditto
      */
     public List<ModuleInfo> getSortedByDisplayName() {
@@ -93,6 +94,7 @@ public class InstalledModules {
 
     /**
      * All ModuleInfo sorted by code name base.
+     *
      * @return ditto
      */
     public List<ModuleInfo> getSortedByCodeNameBase() {
@@ -101,6 +103,7 @@ public class InstalledModules {
 
     /**
      * Should return documentation links (tutorials?) for a given module.
+     *
      * @param moduleInfo The module
      * @return ditto
      */
@@ -111,6 +114,7 @@ public class InstalledModules {
 
     /**
      * Finds a module by codename base.
+     *
      * @param codeNameBase The code name base, such as "org.openide.lookup".
      * @return The module
      */
@@ -121,6 +125,7 @@ public class InstalledModules {
 
     /**
      * Returns a list of dependencies for a given module.
+     *
      * @param moduleInfo The module
      * @param moduleDependencyType The type of dependency
      * @return A list of dependencies.
@@ -132,12 +137,18 @@ public class InstalledModules {
     }
 
     /**
-     * Given a module returns all modules the module depends on (Dependency.TYPE_MODULE)
+     * Given a module returns all modules the module depends on
+     * (Dependency.TYPE_MODULE)
+     *
      * @param moduleInfo The module
      * @return A list of modules 'moduleInfo' depends on.
      */
     public static final List<ModuleModuleDependency> moduleDependencies(ModuleInfo moduleInfo) {
         return getInstance().moduleDependencies.dependenciesOf(moduleInfo);
+    }
+
+    public static List<ModuleModuleDependency> invertedModuleDependencies(ModuleInfo moduleInfo) {
+        return getInstance().moduleDependencies.invertedDepdendenciesOf(moduleInfo);
     }
 
 }
