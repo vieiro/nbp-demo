@@ -113,14 +113,8 @@ public final class NBPFeaturesTopComponent extends TopComponent {
     }
 
     public void doLayout() {
-        // cardContainer.setMinimumSize(new Dimension(scrollPane.getWidth(), 4));
-        // cardContainer.getParent().setMaximumSize(new Dimension(scrollPane.getWidth(), 4096));
-        // System.out.println("PARENT " + cardContainer.getParent());
-        // scrollPane.getViewport().setMaximumSize(new Dimension(scrollPane.getWidth(), 4096));
-        //cardContainer.getParent().doLayout();
         cardContainer.doLayout();;
         super.doLayout();
-        System.out.println("Features top component layout final size " + getWidth());
     }
     
     

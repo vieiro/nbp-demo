@@ -29,23 +29,18 @@ import java.util.ArrayList;
  */
 public class WidthFlowLayout implements LayoutManager {
 
-    private ArrayList<Component> components;
     private Component widthComponent;
 
     public WidthFlowLayout(Component widthComponent) {
         this.widthComponent = widthComponent;
-        components = new ArrayList<>();
     }
 
     @Override
     public void addLayoutComponent(String string, Component component) {
-        System.out.println("Adding component " + component + " constraint " + string);
-        components.add(component);
     }
 
     @Override
     public void removeLayoutComponent(Component component) {
-        components.remove(component);
     }
 
     @Override
