@@ -52,8 +52,8 @@ public class WidthFlowLayout implements LayoutManager {
         maxWidth -= insets.left + insets.right;
         int rowHeight = 0;
         
-        int maxX = 0;
-        int maxY = insets.top;
+        int maxX = x;
+        int maxY = y;
 
         for (int i = 0; i < container.getComponents().length; i++) {
             Component c = container.getComponent(i);
@@ -62,7 +62,9 @@ public class WidthFlowLayout implements LayoutManager {
             if (moveToNextRow) {
                 x = insets.left;
                 y = y + rowHeight;
+                maxX = Math.max(maxX, x + cd.width);
                 maxY = Math.max(maxY, y + cd.height);
+                x += cd.width;
                 rowHeight = cd.height;
             } else {
                 maxX = Math.max(maxX, x + cd.width);
@@ -92,7 +94,7 @@ public class WidthFlowLayout implements LayoutManager {
         int y = insets.top;
         maxWidth -= insets.left + insets.right;
         int rowHeight = 0;
-        
+
         for (int i = 0; i < container.getComponents().length; i++) {
             Component c = container.getComponent(i);
             Dimension cd = c.getPreferredSize();
