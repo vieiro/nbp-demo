@@ -6,3 +6,4 @@ nbdist/
 .nb-gradle/
 *.swp
 *.swo
+/netbeans-platform-demo/nbproject/private/
